@@ -2,26 +2,27 @@ const express = require("express");
 const bodyParser = require("body-parser");
 
 const app = express();
-var items=["Cook food","Eat food","Watch TV"];
+let items=["Cook food","Eat food","Watch TV"];
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(express.static("public"))
 
 
 app.get("/", function (req, res) {
-    var today = new Date();
-    var options={
+    let today = new Date();
+    let options={
         weekday:'long',
         day:'numeric',
         month:'long'
     };
-    var day=today.toLocaleDateString('en-us',options);
+    let day=today.toLocaleDateString('en-us',options);
 
     res.render("list", { kindOfDay: day,newListItems:items });
 });
 
 app.post("/",function(req,res){
-    var item=req.body.toDo;
+    let item=req.body.toDo;
     items.push(item);
     res.redirect("/");
 
