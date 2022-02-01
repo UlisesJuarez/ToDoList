@@ -50,14 +50,12 @@ app.get("/", function (req, res) {
 });
 
 app.post("/",function(req,res){
-    let item=req.body.toDo;
-    if(req.body.list==="Work"){
-        workItems.push(item);
-        res.redirect("/work")
-    }else{
-        items.push(item);
-        res.redirect("/");
-    }
+    const itemName=req.body.toDo;
+    const item=new Item({
+        name:itemName
+    });
+    item.save();
+    res.redirect("/")
 })
 
 app.get("/work",function(req,res){
