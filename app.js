@@ -1,9 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const moongose = require("mongoose")
+const _=require("lodash")
 
 const app = express();
-const moongose = require("mongoose")
+
+
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -79,16 +81,28 @@ app.post("/", function (req, res) {
 
 app.post("/delete", function (req, res) {
     const itemId = req.body.checkbox
-    Item.findByIdAndRemove(itemId, function (err) {
-        if (!err) {
-            console.log("Successfully deleted item");
-            res.redirect("/")
-        }
-    })
+    const listName=req.body.listName
+
+    if(listName==="Today"){
+        Item.findByIdAndRemove(itemId, function (err) {
+            if (!err) {
+                console.log("Successfully deleted item");
+                res.redirect("/")
+            }
+        })
+    }else{
+        List.findOneAndUpdate({name:listName},{$pull:{items:{_id:itemId}}},function(err,foundList){
+            if(!err){
+                res.redirect("/"+listName);
+            }
+        })
+    }
+
+
 })
 
 app.get("/:listName", function (req, res) {
-    const listName = req.params.listName
+    const listName = _.capitalize(req.params.listName)
 
     List.findOne({ name: listName }, function (err, foundList) {
         if (!err) {
