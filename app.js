@@ -48,7 +48,7 @@ app.get("/", function (req, res) {
             })
             res.redirect("/");
         } else {
-            res.render("list", { listTitle: "Today", newListItems: foundItems });
+            res.render("list", { listTitle: "Today", newListItems: foundItems }); 
         }
     })
 
@@ -57,11 +57,24 @@ app.get("/", function (req, res) {
 
 app.post("/", function (req, res) {
     const itemName = req.body.toDo;
+    const listName = req.body.list;
+
     const item = new Item({
         name: itemName
     });
-    item.save();
-    res.redirect("/")
+
+    if (listName === "Today") {
+        item.save();
+        res.redirect("/")
+    }else{
+        List.findOne({name:listName},function(err,foundList) {
+            foundList.items.push(item)
+            foundList.save()
+            res.redirect("/"+listName)
+        })
+    }
+
+
 })
 
 app.post("/delete", function (req, res) {
@@ -86,9 +99,9 @@ app.get("/:listName", function (req, res) {
                 })
 
                 list.save()
-                res.redirect("/"+listName)
+                res.redirect("/" + listName)
             } else {
-                res.render("list", { listTitle:foundList.name, newListItems: foundList.items});
+                res.render("list", { listTitle: foundList.name, newListItems: foundList.items });
             }
         }
     })
