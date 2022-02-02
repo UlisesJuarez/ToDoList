@@ -11,7 +11,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"))
 
-moongose.connect("mongodb://localhost:27017/todolistDB", { useNewUrlParser: true });
+moongose.connect("mongodb+srv://admin-ulises:Test-uli123@cluster0.0ayal.mongodb.net/todolistDB", { useNewUrlParser: true });
 
 const itemsSchema = {
     name: String
